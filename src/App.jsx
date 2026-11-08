@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Features from './components/Features';
-import ProductCatalog from './components/ProductCatalog';
-import CtaSection from './components/CtaSection';
 import Footer from './components/Footer';
 import CartDrawer from './components/CartDrawer';
 import CheckoutModal from './components/CheckoutModal';
 import AdminModal from './components/AdminModal';
 import TipsModal from './components/TipsModal';
+
+// Tiga Halaman Utama Proyek
+import Beranda from './pages/Beranda';
 import Katalog from './pages/Katalog';
 import LoginOwner from './pages/LoginOwner';
+
 import { productsData } from './data/products';
 
 export default function App() {
@@ -87,7 +87,7 @@ export default function App() {
     setCart([]);
   };
 
-  // Jika sedang membuka halaman Login Owner, tampilkan khusus halaman login penuh
+  // Jika sedang membuka halaman Login Owner, tampilkan halaman Login penuh
   if (activeTab === 'login-owner') {
     return (
       <LoginOwner
@@ -125,32 +125,23 @@ export default function App() {
         }}
       />
 
-      {/* Konten Halaman */}
+      {/* Konten Halaman: Berpindah antara 'beranda' atau 'katalog' */}
       <main className="flex-1">
         {activeTab === 'katalog' ? (
-          /* Halaman Katalog Khusus */
+          /* Halaman 1: Katalog Produk */
           <Katalog 
             onTambahKeranjang={handleAddToCart}
             initialDetailProduct={selectedDetailProduct}
             onClearInitialDetail={() => setSelectedDetailProduct(null)}
           />
         ) : (
-          /* Halaman Beranda */
-          <>
-            <Hero
-              onExploreClick={() => setActiveTab('katalog')}
-              onAboutClick={() => {
-                document.getElementById('cerita')?.scrollIntoView({ behavior: 'smooth' });
-              }}
-            />
-            <Features />
-            <ProductCatalog
-              products={products}
-              onOrderProduct={handlePesanDariBeranda}
-              onOpenTips={() => setIsTipsOpen(true)}
-            />
-            <CtaSection onStartOrder={() => setActiveTab('katalog')} />
-          </>
+          /* Halaman 2: Beranda Utama */
+          <Beranda
+            products={products}
+            onPesanProduk={handlePesanDariBeranda}
+            onBukaKatalog={() => setActiveTab('katalog')}
+            onBukaTips={() => setIsTipsOpen(true)}
+          />
         )}
       </main>
 
