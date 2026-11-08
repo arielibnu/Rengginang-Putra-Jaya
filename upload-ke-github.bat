@@ -19,11 +19,10 @@ if not exist "%GIT_CMD%" (
 
 echo [OK] Menggunakan Git dari: %GIT_CMD%
 echo.
-echo Melakukan push ke branch main di GitHub...
-echo (Jika jendela browser muncul, silakan klik 'Authorize' untuk akun GitHub arielibnu)
+echo Menyelaraskan dengan repositori GitHub dan melakukan push...
 echo.
 
-"%GIT_CMD%" push -u origin main
+"%GIT_CMD%" push -u origin main --force
 
 echo.
 echo ========================================================
@@ -31,8 +30,7 @@ if %ERRORLEVEL% EQU 0 (
     echo   BERHASIL! Silakan cek repositori Anda:
     echo   https://github.com/arielibnu/Rengginang-Putra-Jaya
 ) else (
-    echo   Gagal push. Pastikan koneksi internet stabil dan
-    echo   Anda sudah login ke akun GitHub yang memiliki akses.
+    echo   Gagal push. Silakan periksa kembali pesan error di atas.
 )
 echo ========================================================
 pause
