@@ -10,12 +10,13 @@ import CheckoutModal from './components/CheckoutModal';
 import AdminModal from './components/AdminModal';
 import TipsModal from './components/TipsModal';
 import Katalog from './pages/Katalog';
+import LoginOwner from './pages/LoginOwner';
 import { productsData } from './data/products';
 
 export default function App() {
   const [products, setProducts] = useState(productsData);
 
-  // Tab yang aktif: 'beranda' atau 'katalog' (default ke beranda)
+  // Tab yang aktif: 'beranda', 'katalog', atau 'login-owner'
   const [activeTab, setActiveTab] = useState('beranda');
 
   // Produk yang akan otomatis dibuka di modal "Lihat Detail" katalog
@@ -59,8 +60,7 @@ export default function App() {
     showToast(`1 pack ${item.nama || item.name} dimasukkan ke keranjang`);
   };
 
-  // FUNGSI UTAMA: Saat tombol "Pesan Sekarang" di Beranda diklik,
-  // langsung berpindah ke halaman Katalog dan membuka modal "Lihat Detail" produk tersebut!
+  // Saat tombol "Pesan Sekarang" di Beranda diklik, buka katalog dan langsung buka detailnya
   const handlePesanDariBeranda = (product) => {
     setActiveTab('katalog');
     setSelectedDetailProduct(product);
@@ -87,6 +87,19 @@ export default function App() {
     setCart([]);
   };
 
+  // Jika sedang membuka halaman Login Owner, tampilkan khusus halaman login penuh
+  if (activeTab === 'login-owner') {
+    return (
+      <LoginOwner
+        onKembali={() => setActiveTab('beranda')}
+        onLoginSukses={() => {
+          setActiveTab('beranda');
+          setIsAdminOpen(true);
+        }}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#FAF6F0] flex flex-col font-sans selection:bg-[#FCD2BC] selection:text-[#5C200E]">
       
@@ -102,7 +115,7 @@ export default function App() {
       <Navbar
         cartCount={cartCount}
         onOpenCart={() => setIsCartOpen(true)}
-        onOpenAdmin={() => setIsAdminOpen(true)}
+        onOpenAdmin={() => setActiveTab('login-owner')}
         activeTab={activeTab}
         onSelectTab={(tab) => {
           setActiveTab(tab);
@@ -143,7 +156,7 @@ export default function App() {
 
       {/* Footer */}
       <Footer
-        onOpenAdmin={() => setIsAdminOpen(true)}
+        onOpenAdmin={() => setActiveTab('login-owner')}
         onOpenCart={() => setIsCartOpen(true)}
         onOpenTips={() => setIsTipsOpen(true)}
         isKatalogPage={activeTab === 'katalog'}
@@ -170,7 +183,7 @@ export default function App() {
         onConfirmOrder={handleConfirmOrder}
       />
 
-      {/* Modal Login Pengelola / Owner */}
+      {/* Modal Dashboard Manajemen Stok Mas Ifur */}
       <AdminModal
         isOpen={isAdminOpen}
         onClose={() => setIsAdminOpen(false)}
