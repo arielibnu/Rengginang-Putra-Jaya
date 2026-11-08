@@ -10,6 +10,7 @@ import TipsModal from './components/TipsModal';
 import Beranda from './pages/Beranda';
 import Katalog from './pages/Katalog';
 import LoginOwner from './pages/LoginOwner';
+import Registrasi from './pages/Registrasi';
 
 // Data tampilan sementara sebelum dihubungkan ke API Golang
 import { productsData } from './data/products';
@@ -98,11 +99,23 @@ export default function App() {
     setCart([]);
   };
 
+  // Jika sedang membuka halaman Registrasi
+  if (activeTab === 'registrasi') {
+    return (
+      <Registrasi
+        onKembali={() => setActiveTab('beranda')}
+        onKeLogin={() => setActiveTab('login-owner')}
+        onDaftarSukses={() => setActiveTab('login-owner')}
+      />
+    );
+  }
+
   // Jika sedang membuka halaman Login, tampilkan UI Login penuh
   if (activeTab === 'login-owner') {
     return (
       <LoginOwner
         onKembali={() => setActiveTab('beranda')}
+        onKeRegistrasi={() => setActiveTab('registrasi')}
         onLoginSukses={() => {
           setActiveTab('beranda');
           setIsAdminOpen(true);

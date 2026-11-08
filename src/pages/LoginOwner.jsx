@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 // Halaman Masuk / Registrasi Pengelola Rengginang Putra JAYA
-export default function LoginOwner({ onKembali, onLoginSukses }) {
+export default function LoginOwner({ onKembali, onLoginSukses, onKeRegistrasi }) {
   // 1. Data form login (diisi default sesuai desain baru)
   const [email, setEmail] = useState('admin123@gmail.com');
   const [password, setPassword] = useState('admin123');
@@ -25,11 +25,12 @@ export default function LoginOwner({ onKembali, onLoginSukses }) {
     }
   };
 
-  // 3. Fungsi saat tombol "Registrasi" diklik
+  // 3. Fungsi saat tombol "Registrasi" diklik (Mengarahkan ke halaman registrasi)
   const submitRegistrasi = () => {
-    alert('Registrasi akun baru diproses untuk email: ' + email);
-    if (onLoginSukses) {
-      onLoginSukses();
+    if (onKeRegistrasi) {
+      onKeRegistrasi();
+    } else {
+      alert('Membuka halaman registrasi...');
     }
   };
 
