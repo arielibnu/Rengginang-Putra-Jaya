@@ -5,14 +5,17 @@ export const DATA_PRODUK = [
   {
     id: 'terasi',
     nama: 'Rengginang Terasi',
+    name: 'Rengginang Terasi',
     kategori: 'VARIAN TERASI ASLI',
     badge: '🔥 Bestseller',
     badgeWarna: 'bg-[#C2410C] text-white',
     rating: '4.9',
     ulasan: '142',
     gambar: '/images/terasi.png',
+    image: '/images/terasi.png',
     deskripsi: 'Rengginang gurih dengan racikan terasi udang sangrai khas pesisir Situbondo-Sumenep.',
     harga: 28000,
+    price: 28000,
     stok: 24,
     stokTeks: 'Sisa 24 bungkus',
     stokWarna: 'bg-[#C8F2D5] text-[#1B6E3B]',
@@ -22,13 +25,16 @@ export const DATA_PRODUK = [
   {
     id: 'udang',
     nama: 'Rengginang Udang',
+    name: 'Rengginang Udang',
     kategori: 'VARIAN UDANG SEGAR',
     badge: null,
     rating: '4.8',
     ulasan: '98',
     gambar: '/images/udang.png',
+    image: '/images/udang.png',
     deskripsi: 'Perpaduan kaldu udang laut segar dengan ketan premium, renyah mekar dan wangi gurih.',
     harga: 28000,
+    price: 28000,
     stok: 18,
     stokTeks: 'Sisa 18 bungkus',
     stokWarna: 'bg-[#C8F2D5] text-[#1B6E3B]',
@@ -38,13 +44,16 @@ export const DATA_PRODUK = [
   {
     id: 'bawang',
     nama: 'Rengginang Bawang',
+    name: 'Rengginang Bawang',
     kategori: 'VARIAN BAWANG KLASIK',
     badge: null,
     rating: '4.8',
     ulasan: '76',
     gambar: '/images/bawang.png',
+    image: '/images/bawang.png',
     deskripsi: 'Aroma bawang putih dan rempah pilihan yang harum, rasa gurih ramah untuk cemilan keluarga.',
     harga: 28000,
+    price: 28000,
     stok: 27,
     stokTeks: 'Sisa 27 bungkus',
     stokWarna: 'bg-[#C8F2D5] text-[#1B6E3B]',
@@ -54,14 +63,17 @@ export const DATA_PRODUK = [
   {
     id: 'cumi',
     nama: 'Rengginang Cumi',
+    name: 'Rengginang Cumi',
     kategori: 'VARIAN CUMI SPESIAL',
     badge: '⏰ Segera Habis',
     badgeWarna: 'bg-[#D97706] text-white',
     rating: '4.8',
     ulasan: '64',
     gambar: '/images/cumi.png',
+    image: '/images/cumi.png',
     deskripsi: 'Khas cumi pesisir dengan tinta cumi asli alami. Rasa gurih laut yang mendalam dan meletup renyah.',
     harga: 28000,
+    price: 28000,
     stok: 3,
     stokTeks: 'Sisa 3 bungkus!',
     stokWarna: 'bg-[#FEE2CC] text-[#B45309]',
@@ -82,7 +94,6 @@ export default function Katalog({ onTambahKeranjang, initialDetailProduct, onCle
     if (initialDetailProduct) {
       const target = DATA_PRODUK.find(p => p.id === initialDetailProduct.id) || initialDetailProduct;
       setDetailProduk(target);
-      // Scroll ke paling atas halaman katalog
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [initialDetailProduct]);
@@ -170,22 +181,19 @@ export default function Katalog({ onTambahKeranjang, initialDetailProduct, onCle
           >
             {/* Foto Produk & Badge */}
             <div className="relative aspect-[16/10] bg-[#FAF6F0] overflow-hidden">
-              {/* Badge khusus (Bestseller / Segera Habis) */}
               {item.badge && (
                 <span className={`absolute top-2.5 left-2.5 text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-xs ${item.badgeWarna}`}>
                   {item.badge}
                 </span>
               )}
 
-              {/* Berat Kemasan (450 gr) */}
               <span className="absolute bottom-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded bg-black/60 text-white">
                 450 gr
               </span>
 
-              {/* Gambar asli kemasan */}
               <img
-                src={item.gambar}
-                alt={item.nama}
+                src={item.gambar || item.image}
+                alt={item.nama || item.name}
                 className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-300"
               />
             </div>
@@ -193,7 +201,6 @@ export default function Katalog({ onTambahKeranjang, initialDetailProduct, onCle
             {/* Informasi Produk */}
             <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
               <div>
-                {/* Kategori & Rating */}
                 <div className="flex items-center justify-between text-[11px] mb-1">
                   <span className="font-bold text-[#A84E20] uppercase tracking-wider text-[10px]">
                     {item.kategori}
@@ -203,34 +210,30 @@ export default function Katalog({ onTambahKeranjang, initialDetailProduct, onCle
                   </span>
                 </div>
 
-                {/* Nama Produk */}
                 <h3 className="font-extrabold text-base text-[#201815]">
-                  {item.nama}
+                  {item.nama || item.name}
                 </h3>
 
-                {/* Deskripsi Singkat */}
                 <p className="text-xs text-[#736A62] mt-1 line-clamp-2 leading-relaxed">
                   {item.deskripsi}
                 </p>
               </div>
 
               <div>
-                {/* Harga & Sisa Stok */}
                 <div className="flex items-center justify-between pt-2 border-t border-[#F5ECE1] mb-3">
                   <div>
                     <span className="text-base font-extrabold text-[#8A3319]">
-                      Rp{item.harga.toLocaleString('id-ID')}
+                      Rp{(item.harga || item.price).toLocaleString('id-ID')}
                     </span>
                     <span className="text-xs text-[#736A62]"> / pack</span>
                   </div>
                   
-                  {/* Badge Stok */}
                   <span className={`px-2 py-0.5 rounded-md text-[11px] font-bold ${item.stokWarna}`}>
                     {item.stokTeks}
                   </span>
                 </div>
 
-                {/* 2 Tombol Aksi: Lihat Detail & + Keranjang */}
+                {/* 2 Tombol Aksi */}
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => setDetailProduk(item)}
@@ -258,7 +261,6 @@ export default function Katalog({ onTambahKeranjang, initialDetailProduct, onCle
       {detailProduk && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 border border-[#EFE6DC] shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
-            {/* Tombol Tutup */}
             <button
               onClick={handleTutupDetail}
               className="absolute top-4 right-4 text-stone-400 hover:text-stone-700 font-bold text-lg p-1"
@@ -266,16 +268,14 @@ export default function Katalog({ onTambahKeranjang, initialDetailProduct, onCle
               ✕
             </button>
 
-            {/* Gambar Modal */}
             <img 
-              src={detailProduk.gambar} 
-              alt={detailProduk.nama} 
+              src={detailProduk.gambar || detailProduk.image} 
+              alt={detailProduk.nama || detailProduk.name} 
               className="w-full h-44 object-cover rounded-xl border border-[#EFE6DC] mb-4"
             />
 
-            {/* Detail Teks */}
             <div className="flex items-center justify-between mb-1">
-              <h3 className="text-xl font-extrabold text-[#201815]">{detailProduk.nama}</h3>
+              <h3 className="text-xl font-extrabold text-[#201815]">{detailProduk.nama || detailProduk.name}</h3>
               <span className="text-xs font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
                 Halal
               </span>
@@ -292,7 +292,7 @@ export default function Katalog({ onTambahKeranjang, initialDetailProduct, onCle
             <div className="flex items-center justify-between pt-2 border-t border-[#EFE6DC]">
               <div>
                 <p className="text-[11px] text-[#736A62]">Harga resmi:</p>
-                <p className="text-lg font-extrabold text-[#8A3319]">Rp{detailProduk.harga.toLocaleString('id-ID')} / pack</p>
+                <p className="text-lg font-extrabold text-[#8A3319]">Rp{(detailProduk.harga || detailProduk.price).toLocaleString('id-ID')} / pack</p>
               </div>
 
               <button

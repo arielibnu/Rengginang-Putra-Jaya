@@ -11,27 +11,25 @@ import Beranda from './pages/Beranda';
 import Katalog from './pages/Katalog';
 import LoginOwner from './pages/LoginOwner';
 
-// Data tampilan sementara (UI mock data) sebelum dihubungkan ke API Golang
+// Data tampilan sementara sebelum dihubungkan ke API Golang
 import { productsData } from './data/products';
 
 export default function App() {
-  // State produk untuk tampilan frontend
   const [products] = useState(productsData);
 
-  // Tab yang aktif di antarmuka pengguna: 'beranda', 'katalog', atau 'login-owner'
+  // Tab yang aktif: 'beranda', 'katalog', atau 'login-owner'
   const [activeTab, setActiveTab] = useState('beranda');
 
   // Produk yang dipilih untuk dilihat detailnya di halaman katalog
   const [selectedDetailProduct, setSelectedDetailProduct] = useState(null);
 
-  // Keranjang belanja lokal browser (Client-side Cart)
+  // Keranjang belanja lokal browser
   const [cart, setCart] = useState([
     { ...productsData[0], quantity: 1 },
     { ...productsData[1], quantity: 1 },
     { ...productsData[2], quantity: 1 },
   ]);
 
-  // State untuk kontrol buka/tutup modal UI
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
@@ -45,30 +43,41 @@ export default function App() {
     }, 3000);
   };
 
-  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const cartCount = cart.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
 
-  // Fungsi antarmuka: Tambah produk ke keranjang lokal
+  // Fungsi Tambah Produk ke Keranjang (Standarisasi properti agar tidak pernah blank/error)
   const handleAddToCart = (item) => {
+    const itemBaru = {
+      id: item.id,
+      name: item.name || item.nama || 'Rengginang',
+      nama: item.nama || item.name || 'Rengginang',
+      image: item.image || item.gambar || '/images/terasi.png',
+      gambar: item.gambar || item.image || '/images/terasi.png',
+      price: Number(item.price || item.harga || 28000),
+      harga: Number(item.harga || item.price || 28000),
+      weight: item.weight || '450g',
+    };
+
     setCart((prevCart) => {
-      const existing = prevCart.find((p) => p.id === item.id);
+      const existing = prevCart.find((p) => p.id === itemBaru.id);
       if (existing) {
         return prevCart.map((p) =>
-          p.id === item.id ? { ...p, quantity: p.quantity + 1 } : p
+          p.id === itemBaru.id ? { ...p, quantity: (Number(p.quantity) || 1) + 1 } : p
         );
       } else {
-        return [...prevCart, { ...item, name: item.name || item.nama, quantity: 1, weight: '450g' }];
+        return [...prevCart, { ...itemBaru, quantity: 1 }];
       }
     });
-    showToast(`1 pack ${item.nama || item.name} dimasukkan ke keranjang`);
+
+    showToast(`1 pack ${itemBaru.name} dimasukkan ke keranjang`);
   };
 
-  // Navigasi UI: Saat klik "Pesan Sekarang" di Beranda, buka katalog dan langsung munculkan pop-up detail
+  // Saat tombol "Pesan Sekarang" di Beranda diklik, buka katalog dan langsung buka detailnya
   const handlePesanDariBeranda = (product) => {
     setActiveTab('katalog');
     setSelectedDetailProduct(product);
   };
 
-  // Fungsi antarmuka: Ubah jumlah item keranjang
   const handleUpdateQty = (productId, newQty) => {
     if (newQty <= 0) {
       setCart((prevCart) => prevCart.filter((p) => p.id !== productId));
@@ -81,12 +90,10 @@ export default function App() {
     );
   };
 
-  // Fungsi antarmuka: Hapus item dari keranjang
   const handleRemoveItem = (productId) => {
     setCart((prevCart) => prevCart.filter((p) => p.id !== productId));
   };
 
-  // Fungsi antarmuka: Selesaikan checkout di sisi frontend
   const handleConfirmOrder = () => {
     setCart([]);
   };
@@ -157,7 +164,7 @@ export default function App() {
         isKatalogPage={activeTab === 'katalog'}
       />
 
-      {/* Drawer Keranjang Belanja (Sisi Kanan) */}
+      {/* Drawer Keranjang Belanja */}
       <CartDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}

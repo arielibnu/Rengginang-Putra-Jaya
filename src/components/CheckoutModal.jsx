@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { IconX, IconShieldCheck, IconWhatsApp, IconCheck, IconTruck } from './Icons';
+import { IconX, IconShieldCheck, IconWhatsApp, IconCheck } from './Icons';
 import { shopInfo } from '../data/products';
 
 export default function CheckoutModal({ 
   isOpen, 
   onClose, 
-  cart, 
+  cart = [], 
   onConfirmOrder 
 }) {
   const [formData, setFormData] = useState({
@@ -22,9 +22,13 @@ export default function CheckoutModal({
 
   if (!isOpen) return null;
 
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const shippingFee = 15000; // Flat estimate shipping
+  const totalItems = cart.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
+  const subtotal = cart.reduce((sum, item) => {
+    const price = Number(item.price || item.harga || 28000);
+    const qty = Number(item.quantity || 1);
+    return sum + (price * qty);
+  }, 0);
+  const shippingFee = 15000;
   const grandTotal = subtotal + shippingFee;
 
   const handleChange = (e) => {
@@ -44,25 +48,26 @@ export default function CheckoutModal({
     const orderId = 'PJ-' + Math.floor(100000 + Math.random() * 900000);
     setLastOrderId(orderId);
     
-    // Process order in app
-    onConfirmOrder({
-      orderId,
-      customer: formData,
-      items: cart,
-      grandTotal,
-      date: new Date().toLocaleDateString('id-ID', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric'
-      })
-    });
+    if (onConfirmOrder) {
+      onConfirmOrder({
+        orderId,
+        customer: formData,
+        items: cart,
+        grandTotal
+      });
+    }
 
     setIsSuccess(true);
   };
 
   const handleOpenWhatsAppOrder = () => {
     const itemListText = cart
-      .map(item => `• ${item.name} (${item.quantity} bks x Rp${item.price.toLocaleString('id-ID')})`)
+      .map(item => {
+        const name = item.name || item.nama || 'Rengginang';
+        const qty = Number(item.quantity || 1);
+        const price = Number(item.price || item.harga || 28000);
+        return `• ${name} (${qty} bks x Rp${price.toLocaleString('id-ID')})`;
+      })
       .join('%0A');
 
     const message = 
@@ -267,4 +272,3 @@ export default function CheckoutModal({
     </div>
   );
 }
-
