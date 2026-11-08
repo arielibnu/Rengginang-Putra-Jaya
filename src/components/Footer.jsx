@@ -6,10 +6,10 @@ export default function Footer({ onOpenAdmin, onOpenCart, onOpenTips, isKatalogP
   return (
     <footer className="bg-[#FAF6F0] pt-12 sm:pt-16 pb-8 border-t border-[#EFE6DC]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        
+
         {/* Columns Grid */}
         <div className={`grid grid-cols-1 sm:grid-cols-2 ${isKatalogPage ? 'lg:grid-cols-12' : 'lg:grid-cols-12'} gap-8 mb-12`}>
-          
+
           {/* Column 1: Brand Info */}
           <div className={`${isKatalogPage ? 'lg:col-span-5' : 'lg:col-span-4'} space-y-4`}>
             <div className="flex items-center gap-3">
@@ -56,9 +56,9 @@ export default function Footer({ onOpenAdmin, onOpenCart, onOpenTips, isKatalogP
                 </button>
               </li>
               <li>
-                <a 
+                <a
                   href={`https://wa.me/${shopInfo.whatsappNumber}?text=Halo%20Putra%20JAYA,%20saya%20ingin%20pesan%20rengginang`}
-                  target="_blank" 
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-[#8A3319] transition-colors"
                 >
@@ -98,7 +98,7 @@ export default function Footer({ onOpenAdmin, onOpenCart, onOpenTips, isKatalogP
               <p className="text-xs text-[#655B53] leading-relaxed">
                 Sistem internal manajemen stok rengginang jemur, verifikasi pesanan, & logistik reseller.
               </p>
-              
+
               <button
                 onClick={onOpenAdmin}
                 className="w-full bg-[#FEEFE6] hover:bg-[#FCDFD0] text-[#8A3319] text-xs font-semibold py-2.5 px-4 rounded-xl border border-[#F6DAC8] flex items-center justify-center gap-2 transition-all"

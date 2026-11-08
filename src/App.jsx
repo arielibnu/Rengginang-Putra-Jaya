@@ -15,8 +15,11 @@ import { productsData } from './data/products';
 export default function App() {
   const [products, setProducts] = useState(productsData);
 
-  // Tab yang aktif: 'beranda' atau 'katalog'
-  const [activeTab, setActiveTab] = useState('katalog');
+  // Tab yang aktif: 'beranda' atau 'katalog' (default ke beranda)
+  const [activeTab, setActiveTab] = useState('beranda');
+
+  // Produk yang akan otomatis dibuka di modal "Lihat Detail" katalog
+  const [selectedDetailProduct, setSelectedDetailProduct] = useState(null);
 
   // Keranjang belanja dengan 3 item default sesuai gambar
   const [cart, setCart] = useState([
@@ -53,7 +56,14 @@ export default function App() {
         return [...prevCart, { ...item, name: item.name || item.nama, quantity: 1, weight: '450g' }];
       }
     });
-    showToast(`1 pack ${item.nama || item.name} ditambahkan ke keranjang`);
+    showToast(`1 pack ${item.nama || item.name} dimasukkan ke keranjang`);
+  };
+
+  // FUNGSI UTAMA: Saat tombol "Pesan Sekarang" di Beranda diklik,
+  // langsung berpindah ke halaman Katalog dan membuka modal "Lihat Detail" produk tersebut!
+  const handlePesanDariBeranda = (product) => {
+    setActiveTab('katalog');
+    setSelectedDetailProduct(product);
   };
 
   const handleUpdateQty = (productId, newQty) => {
@@ -94,16 +104,25 @@ export default function App() {
         onOpenCart={() => setIsCartOpen(true)}
         onOpenAdmin={() => setIsAdminOpen(true)}
         activeTab={activeTab}
-        onSelectTab={setActiveTab}
+        onSelectTab={(tab) => {
+          setActiveTab(tab);
+          if (tab === 'beranda') {
+            setSelectedDetailProduct(null);
+          }
+        }}
       />
 
       {/* Konten Halaman */}
       <main className="flex-1">
         {activeTab === 'katalog' ? (
-          /* Halaman Katalog Khusus (sesuai gambar katalog baru) */
-          <Katalog onTambahKeranjang={handleAddToCart} />
+          /* Halaman Katalog Khusus */
+          <Katalog 
+            onTambahKeranjang={handleAddToCart}
+            initialDetailProduct={selectedDetailProduct}
+            onClearInitialDetail={() => setSelectedDetailProduct(null)}
+          />
         ) : (
-          /* Halaman Beranda / Landing Page */
+          /* Halaman Beranda */
           <>
             <Hero
               onExploreClick={() => setActiveTab('katalog')}
@@ -114,10 +133,7 @@ export default function App() {
             <Features />
             <ProductCatalog
               products={products}
-              onOrderProduct={(p) => {
-                handleAddToCart(p);
-                setIsCartOpen(true);
-              }}
+              onOrderProduct={handlePesanDariBeranda}
               onOpenTips={() => setIsTipsOpen(true)}
             />
             <CtaSection onStartOrder={() => setActiveTab('katalog')} />

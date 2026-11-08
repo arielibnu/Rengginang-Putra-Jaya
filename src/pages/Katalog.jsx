@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Data produk dibuat langsung di sini agar mudah dibaca dan dipahami
-const DATA_PRODUK = [
+export const DATA_PRODUK = [
   {
     id: 'terasi',
     nama: 'Rengginang Terasi',
@@ -70,12 +70,29 @@ const DATA_PRODUK = [
   }
 ];
 
-export default function Katalog({ onTambahKeranjang }) {
+export default function Katalog({ onTambahKeranjang, initialDetailProduct, onClearInitialDetail }) {
   // State untuk pencarian varian
   const [kataKunci, setKataKunci] = useState('');
   
   // State untuk modal pop-up detail produk
   const [detailProduk, setDetailProduk] = useState(null);
+
+  // Jika dipicu dari Beranda (klik Pesan Sekarang), otomatis buka modal Lihat Detail
+  useEffect(() => {
+    if (initialDetailProduct) {
+      const target = DATA_PRODUK.find(p => p.id === initialDetailProduct.id) || initialDetailProduct;
+      setDetailProduk(target);
+      // Scroll ke paling atas halaman katalog
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [initialDetailProduct]);
+
+  const handleTutupDetail = () => {
+    setDetailProduk(null);
+    if (onClearInitialDetail) {
+      onClearInitialDetail();
+    }
+  };
 
   // Filter produk berdasarkan input pencarian
   const produkTersaring = DATA_PRODUK.filter(item => 
@@ -240,11 +257,11 @@ export default function Katalog({ onTambahKeranjang }) {
       {/* 4. MODAL POPUP LIHAT DETAIL PRODUK */}
       {detailProduk && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 border border-[#EFE6DC] shadow-2xl relative">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 border border-[#EFE6DC] shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
             {/* Tombol Tutup */}
             <button
-              onClick={() => setDetailProduk(null)}
-              className="absolute top-4 right-4 text-stone-400 hover:text-stone-700 font-bold text-lg"
+              onClick={handleTutupDetail}
+              className="absolute top-4 right-4 text-stone-400 hover:text-stone-700 font-bold text-lg p-1"
             >
               ✕
             </button>
@@ -257,26 +274,31 @@ export default function Katalog({ onTambahKeranjang }) {
             />
 
             {/* Detail Teks */}
-            <h3 className="text-xl font-extrabold text-[#201815]">{detailProduk.nama}</h3>
+            <div className="flex items-center justify-between mb-1">
+              <h3 className="text-xl font-extrabold text-[#201815]">{detailProduk.nama}</h3>
+              <span className="text-xs font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
+                Halal
+              </span>
+            </div>
             <p className="text-xs font-semibold text-[#8A3319] mb-2">{detailProduk.kategori} • Netto 450 gr</p>
             <p className="text-xs text-[#655B53] leading-relaxed mb-4">{detailProduk.deskripsi}</p>
 
             <div className="bg-[#FAF6F0] p-3 rounded-xl border border-[#EFE6DC] text-xs space-y-1 mb-5">
               <p><strong>Komposisi:</strong> {detailProduk.komposisi}</p>
               <p><strong>No. P-IRT:</strong> {detailProduk.pirt}</p>
-              <p><strong>Status:</strong> Tanpa Pengawet & Siap Goreng (Tanpa Dijemur)</p>
+              <p><strong>Kondisi:</strong> Tanpa Pengawet & Siap Langsung Goreng (Tanpa Dijemur)</p>
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between pt-2 border-t border-[#EFE6DC]">
               <div>
-                <p className="text-xs text-[#736A62]">Harga resmi:</p>
+                <p className="text-[11px] text-[#736A62]">Harga resmi:</p>
                 <p className="text-lg font-extrabold text-[#8A3319]">Rp{detailProduk.harga.toLocaleString('id-ID')} / pack</p>
               </div>
 
               <button
                 onClick={() => {
                   onTambahKeranjang(detailProduk);
-                  setDetailProduk(null);
+                  handleTutupDetail();
                 }}
                 className="bg-[#8A3319] hover:bg-[#732913] text-white text-xs font-bold py-2.5 px-4 rounded-xl shadow-xs"
               >
