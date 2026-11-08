@@ -1,8 +1,10 @@
-# Rengginang Putra Jaya
+# Rengginang Putra Jaya (Frontend)
 
-Website katalog dan pemesanan online untuk produk UMKM Rengginang Situbondo Putra Jaya - Sumenep, Madura.
+Repositori Frontend antarmuka website katalog dan pemesanan online untuk produk UMKM **Rengginang Situbondo Putra Jaya - Sumenep, Madura**.
 
-## Tech Stack
+Aplikasi ini berfokus murni pada sisi **Frontend (UI/UX)** menggunakan React.js dan Tailwind CSS, yang dirancang untuk dapat dihubungkan ke **Backend API Golang (Go)** dan database **MySQL**.
+
+## Tech Stack Frontend
 
 - React 18
 - Vite
@@ -21,7 +23,7 @@ Website katalog dan pemesanan online untuk produk UMKM Rengginang Situbondo Putr
    npm install
    ```
 
-3. Jalankan server lokal:
+3. Jalankan server lokal frontend:
    ```bash
    npm run dev
    ```
@@ -31,9 +33,10 @@ Website katalog dan pemesanan online untuk produk UMKM Rengginang Situbondo Putr
    npm run build
    ```
 
-## Fitur
+## Fitur Halaman (Frontend)
 
-- Katalog varian rasa rengginang (Terasi, Udang, Bawang, Cumi)
-- Keranjang belanja dan ringkasan pesanan
-- Checkout instan langsung via WhatsApp
-- Informasi produk, legalitas P-IRT/Halal, dan tips menggoreng
+- **Halaman Beranda (`src/pages/Beranda.jsx`)**: Banner Hero, Cerita UMKM, preview varian produk, dan tombol WhatsApp.
+- **Halaman Katalog (`src/pages/Katalog.jsx`)**: Filter varian, live search, kartu produk, dan pop-up detail produk.
+- **Halaman Login Pengelola (`src/pages/LoginOwner.jsx`)**: Tampilan form Masuk / Registrasi khusus pengelola.
+- **Keranjang Belanja (`src/components/CartDrawer.jsx`)**: Pengelolaan item belanja sisi klien (client-side state).
+- **Form Checkout WhatsApp (`src/components/CheckoutModal.jsx`)**: Pengisian data pemesan yang terhubung langsung ke format chat WhatsApp.

@@ -1,13 +1,11 @@
 import React from 'react';
-import { IconX, IconSun, IconPlus, IconMinus } from './Icons';
+import { IconX, IconSun } from './Icons';
 
-// Modal Dashboard Manajemen Toko & Stok Mas Ifur (Langsung Tampil Tanpa Meminta PIN)
+// Modal Dashboard Manajemen Toko & Stok Mas Ifur (Tampilan Frontend)
 export default function AdminModal({ 
   isOpen, 
   onClose, 
-  products, 
-  onUpdateStock,
-  orders 
+  products = []
 }) {
   if (!isOpen) return null;
 
@@ -62,56 +60,42 @@ export default function AdminModal({
             </div>
           </div>
 
-          {/* Pengatur Stok Harian */}
+          {/* Preview Daftar Stok Produk */}
           <div>
             <div className="flex items-center justify-between mb-2">
               <h4 className="text-xs font-bold text-[#201815] uppercase tracking-wider">
-                Manajemen Stok Harian
+                Daftar Stok Produk
               </h4>
-              <span className="text-[10px] text-stone-500">Otomatis sinkron ke halaman</span>
+              <span className="text-[10px] text-stone-500">Data Frontend</span>
             </div>
 
             <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
               {products.map((p) => (
                 <div 
                   key={p.id}
-                  className="flex items-center justify-between p-2 rounded-xl bg-[#FAF6F0] border border-[#EAE0D5] text-xs"
+                  className="flex items-center justify-between p-2.5 rounded-xl bg-[#FAF6F0] border border-[#EAE0D5] text-xs"
                 >
                   <div>
                     <p className="font-bold text-[#201815]">{p.name || p.nama}</p>
                     <p className="text-[10px] text-[#736A62]">{p.badge || 'Varian Asli'} • Rp{p.price?.toLocaleString('id-ID') || '28.000'}</p>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => onUpdateStock(p.id, Math.max(0, p.stock - 1))}
-                      className="w-6 h-6 rounded bg-white border border-[#DDD] flex items-center justify-center font-bold text-xs hover:bg-stone-50"
-                    >
-                      <IconMinus className="w-3 h-3 text-stone-700" />
-                    </button>
-                    <span className="w-8 text-center font-bold text-[#8A3319]">
-                      {p.stock}
-                    </span>
-                    <button
-                      onClick={() => onUpdateStock(p.id, p.stock + 1)}
-                      className="w-6 h-6 rounded bg-white border border-[#DDD] flex items-center justify-center font-bold text-xs hover:bg-stone-50"
-                    >
-                      <IconPlus className="w-3 h-3 text-stone-700" />
-                    </button>
-                  </div>
+                  <span className="font-bold text-[#8A3319] bg-white px-2.5 py-1 rounded-lg border border-[#E0D5C7]">
+                    Sisa {p.stock} bks
+                  </span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Ringkasan Pesanan & Tombol Selesai */}
+          {/* Catatan Selesai */}
           <div className="pt-2 border-t border-[#EFE6DC] flex items-center justify-between text-xs text-[#736A62]">
-            <span>Total Pesanan Sesi Ini: <strong>{orders.length}</strong></span>
+            <span>Panel Pengelola Selesai</span>
             <button
               onClick={onClose}
-              className="bg-[#8A3319] hover:bg-[#732913] text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold"
+              className="bg-[#8A3319] hover:bg-[#732913] text-white px-4 py-2 rounded-xl text-xs font-semibold"
             >
-              Simpan & Tutup
+              Tutup Panel
             </button>
           </div>
 

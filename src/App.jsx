@@ -6,34 +6,36 @@ import CheckoutModal from './components/CheckoutModal';
 import AdminModal from './components/AdminModal';
 import TipsModal from './components/TipsModal';
 
-// Tiga Halaman Utama Proyek
+// Tiga Halaman Utama Frontend
 import Beranda from './pages/Beranda';
 import Katalog from './pages/Katalog';
 import LoginOwner from './pages/LoginOwner';
 
+// Data tampilan sementara (UI mock data) sebelum dihubungkan ke API Golang
 import { productsData } from './data/products';
 
 export default function App() {
-  const [products, setProducts] = useState(productsData);
+  // State produk untuk tampilan frontend
+  const [products] = useState(productsData);
 
-  // Tab yang aktif: 'beranda', 'katalog', atau 'login-owner'
+  // Tab yang aktif di antarmuka pengguna: 'beranda', 'katalog', atau 'login-owner'
   const [activeTab, setActiveTab] = useState('beranda');
 
-  // Produk yang akan otomatis dibuka di modal "Lihat Detail" katalog
+  // Produk yang dipilih untuk dilihat detailnya di halaman katalog
   const [selectedDetailProduct, setSelectedDetailProduct] = useState(null);
 
-  // Keranjang belanja dengan 3 item default sesuai gambar
+  // Keranjang belanja lokal browser (Client-side Cart)
   const [cart, setCart] = useState([
     { ...productsData[0], quantity: 1 },
     { ...productsData[1], quantity: 1 },
     { ...productsData[2], quantity: 1 },
   ]);
 
+  // State untuk kontrol buka/tutup modal UI
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isTipsOpen, setIsTipsOpen] = useState(false);
-  const [orders, setOrders] = useState([]);
   const [toastMessage, setToastMessage] = useState(null);
 
   const showToast = (msg) => {
@@ -45,7 +47,7 @@ export default function App() {
 
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-  // Tambah item ke keranjang
+  // Fungsi antarmuka: Tambah produk ke keranjang lokal
   const handleAddToCart = (item) => {
     setCart((prevCart) => {
       const existing = prevCart.find((p) => p.id === item.id);
@@ -60,12 +62,13 @@ export default function App() {
     showToast(`1 pack ${item.nama || item.name} dimasukkan ke keranjang`);
   };
 
-  // Saat tombol "Pesan Sekarang" di Beranda diklik, buka katalog dan langsung buka detailnya
+  // Navigasi UI: Saat klik "Pesan Sekarang" di Beranda, buka katalog dan langsung munculkan pop-up detail
   const handlePesanDariBeranda = (product) => {
     setActiveTab('katalog');
     setSelectedDetailProduct(product);
   };
 
+  // Fungsi antarmuka: Ubah jumlah item keranjang
   const handleUpdateQty = (productId, newQty) => {
     if (newQty <= 0) {
       setCart((prevCart) => prevCart.filter((p) => p.id !== productId));
@@ -78,16 +81,17 @@ export default function App() {
     );
   };
 
+  // Fungsi antarmuka: Hapus item dari keranjang
   const handleRemoveItem = (productId) => {
     setCart((prevCart) => prevCart.filter((p) => p.id !== productId));
   };
 
-  const handleConfirmOrder = (orderData) => {
-    setOrders((prev) => [orderData, ...prev]);
+  // Fungsi antarmuka: Selesaikan checkout di sisi frontend
+  const handleConfirmOrder = () => {
     setCart([]);
   };
 
-  // Jika sedang membuka halaman Login Owner, tampilkan halaman Login penuh
+  // Jika sedang membuka halaman Login, tampilkan UI Login penuh
   if (activeTab === 'login-owner') {
     return (
       <LoginOwner
@@ -103,7 +107,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#FAF6F0] flex flex-col font-sans selection:bg-[#FCD2BC] selection:text-[#5C200E]">
       
-      {/* Notifikasi Toast */}
+      {/* Notifikasi Toast UI */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 bg-[#201815] text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2 border border-stone-700 animate-bounce">
           <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
@@ -111,7 +115,7 @@ export default function App() {
         </div>
       )}
 
-      {/* Top Navbar */}
+      {/* Navigasi Atas */}
       <Navbar
         cartCount={cartCount}
         onOpenCart={() => setIsCartOpen(true)}
@@ -125,17 +129,17 @@ export default function App() {
         }}
       />
 
-      {/* Konten Halaman: Berpindah antara 'beranda' atau 'katalog' */}
+      {/* Konten Halaman */}
       <main className="flex-1">
         {activeTab === 'katalog' ? (
-          /* Halaman 1: Katalog Produk */
+          /* Halaman Katalog Produk */
           <Katalog 
             onTambahKeranjang={handleAddToCart}
             initialDetailProduct={selectedDetailProduct}
             onClearInitialDetail={() => setSelectedDetailProduct(null)}
           />
         ) : (
-          /* Halaman 2: Beranda Utama */
+          /* Halaman Beranda Utama */
           <Beranda
             products={products}
             onPesanProduk={handlePesanDariBeranda}
@@ -145,7 +149,7 @@ export default function App() {
         )}
       </main>
 
-      {/* Footer */}
+      {/* Bagian Footer */}
       <Footer
         onOpenAdmin={() => setActiveTab('login-owner')}
         onOpenCart={() => setIsCartOpen(true)}
@@ -153,7 +157,7 @@ export default function App() {
         isKatalogPage={activeTab === 'katalog'}
       />
 
-      {/* Drawer Keranjang Belanja */}
+      {/* Drawer Keranjang Belanja (Sisi Kanan) */}
       <CartDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
@@ -166,7 +170,7 @@ export default function App() {
         }}
       />
 
-      {/* Modal Formulir Pemesanan */}
+      {/* Modal Formulir Pemesanan WhatsApp */}
       <CheckoutModal
         isOpen={isCheckoutOpen}
         onClose={() => setIsCheckoutOpen(false)}
@@ -174,17 +178,11 @@ export default function App() {
         onConfirmOrder={handleConfirmOrder}
       />
 
-      {/* Modal Dashboard Manajemen Stok Mas Ifur */}
+      {/* Modal Panel Pengelola */}
       <AdminModal
         isOpen={isAdminOpen}
         onClose={() => setIsAdminOpen(false)}
         products={products}
-        onUpdateStock={(id, stock) => {
-          setProducts((prev) =>
-            prev.map((p) => (p.id === id ? { ...p, stock } : p))
-          );
-        }}
-        orders={orders}
       />
 
       {/* Modal Panduan Tips Menggoreng */}
