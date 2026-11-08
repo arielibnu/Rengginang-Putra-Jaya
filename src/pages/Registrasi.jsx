@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 // Halaman Registrasi Akun Pengelola Operasional
 export default function Registrasi({ onKembali, onKeLogin, onDaftarSukses }) {
-  // 1. State form isian pendaftaran
+  // 1. Data form isian pendaftaran
   const [namaLengkap, setNamaLengkap] = useState('');
   const [email, setEmail] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
@@ -10,29 +10,30 @@ export default function Registrasi({ onKembali, onKeLogin, onDaftarSukses }) {
   const [konfirmasiPassword, setKonfirmasiPassword] = useState('');
   const [lihatPassword, setLihatPassword] = useState(false);
   const [setujuSyarat, setSetujuSyarat] = useState(false);
+
+  // Pesan error dari validasi backend (muncul di bawah form)
   const [pesanError, setPesanError] = useState('');
 
   // 2. Fungsi saat tombol "Daftar Akun" diklik
+  // (Tanpa validasi required di frontend, validasi akan ditangani langsung oleh backend Go)
   const handleDaftar = (e) => {
     e.preventDefault();
 
-    if (!namaLengkap || !email || !whatsapp || !password) {
-      setPesanError('Semua kolom wajib diisi!');
-      return;
-    }
-
-    if (password !== konfirmasiPassword) {
-      setPesanError('Konfirmasi kata sandi tidak cocok!');
-      return;
-    }
-
-    if (!setujuSyarat) {
-      setPesanError('Anda harus menyetujui ketentuan akses terlebih dahulu.');
-      return;
-    }
-
+    // Reset pesan error sebelumnya
     setPesanError('');
-    alert(`Pendaftaran akun "${namaLengkap}" berhasil! Silakan masuk.`);
+
+    // Siapkan data pendaftaran untuk dikirim ke API backend
+    const dataRegistrasi = {
+      nama: namaLengkap,
+      email: email,
+      whatsapp: whatsapp,
+      password: password,
+      konfirmasiPassword: konfirmasiPassword,
+      setujuSyarat: setujuSyarat
+    };
+
+    // Simulasi sukses pendaftaran (nanti diganti fetch/axios ke backend Go)
+    alert(`Data registrasi "${namaLengkap || 'Akun Baru'}" berhasil dikirim!`);
     
     if (onDaftarSukses) {
       onDaftarSukses();
@@ -78,8 +79,8 @@ export default function Registrasi({ onKembali, onKeLogin, onDaftarSukses }) {
 
         </div>
 
-        {/* FORM PENDAFTARAN */}
-        <form onSubmit={handleDaftar} className="space-y-3.5 pt-1">
+        {/* FORM PENDAFTARAN (noValidate aktif agar tidak muncul popup required bawaan browser) */}
+        <form onSubmit={handleDaftar} noValidate className="space-y-3.5 pt-1">
           
           {/* 1. Nama Lengkap */}
           <div>
@@ -115,7 +116,7 @@ export default function Registrasi({ onKembali, onKeLogin, onDaftarSukses }) {
                 @
               </span>
               <input
-                type="email"
+                type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="pengelola@rengginang-arifah.com"
@@ -134,7 +135,7 @@ export default function Registrasi({ onKembali, onKeLogin, onDaftarSukses }) {
                 📞
               </span>
               <input
-                type="tel"
+                type="text"
                 value={whatsapp}
                 onChange={(e) => setWhatsapp(e.target.value)}
                 placeholder="0812-xxxx-xxxx"
@@ -188,13 +189,6 @@ export default function Registrasi({ onKembali, onKeLogin, onDaftarSukses }) {
             </div>
           </div>
 
-          {/* Pesan Error Jika Ada */}
-          {pesanError && (
-            <p className="text-xs text-red-600 bg-red-50 p-2 rounded-lg border border-red-200">
-              {pesanError}
-            </p>
-          )}
-
           {/* Checkbox Ketentuan */}
           <div className="flex items-start gap-2 pt-1">
             <input
@@ -225,6 +219,15 @@ export default function Registrasi({ onKembali, onKeLogin, onDaftarSukses }) {
           >
             Sudah Punya Akun? Masuk
           </button>
+
+          {/* Kotak Pesan Error di Bawah Form (Menampilkan pesan error dari backend jika ada) */}
+          {pesanError && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-center mt-2">
+              <p className="text-xs text-red-600 font-medium">
+                {pesanError}
+              </p>
+            </div>
+          )}
 
         </form>
 
