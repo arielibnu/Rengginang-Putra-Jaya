@@ -26,13 +26,13 @@ export default function LoginOwner({ onKembali, onLoginSukses }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#FAF4EC] via-[#F8EDE2] to-[#FAF4EC] flex flex-col justify-between items-center py-10 px-4 font-sans">
-
+      
       {/* KOTAK PUTIH LOGIN */}
       <div className="bg-white rounded-3xl p-7 sm:p-9 shadow-xl max-w-md w-full border border-[#EFE4D8] space-y-6">
-
+        
         {/* BAGIAN ATAS: Logo & Judul */}
         <div className="text-center space-y-3">
-
+          
           {/* Badge atas */}
           <div>
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-[#FEEFE6] text-[#A84E20] border border-[#FADCCB]">
@@ -69,7 +69,7 @@ export default function LoginOwner({ onKembali, onLoginSukses }) {
 
         {/* FORM ISIAN */}
         <form onSubmit={submitLogin} className="space-y-4 pt-1">
-
+          
           {/* Input 1: Email / Username */}
           <div>
             <div className="flex items-center justify-between text-xs mb-1.5">
@@ -151,7 +151,6 @@ export default function LoginOwner({ onKembali, onLoginSukses }) {
             className="w-full bg-[#B24622] hover:bg-[#973919] active:scale-[0.99] text-white text-xs sm:text-sm font-bold py-3 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5 mt-2"
           >
             <span>Masuk</span>
-            <span>→</span>
           </button>
 
         </form>

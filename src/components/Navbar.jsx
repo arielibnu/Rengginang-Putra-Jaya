@@ -70,7 +70,7 @@ export default function Navbar({ cartCount, onOpenCart, onOpenAdmin, activeTab, 
             onClick={onOpenAdmin}
             className="flex items-center gap-2 bg-[#FDEEE7] hover:bg-[#FCDFD0] text-[#8A3319] text-xs sm:text-sm font-semibold px-3 sm:px-3.5 py-1.5 rounded-full transition-colors border border-[#F5D8C7]"
           >
-            <span>Login Pengelola</span>
+            <span>Login</span>
             <span className="w-6 h-6 rounded-full bg-[#8A3319] text-white flex items-center justify-center text-[10px]">
               <IconUser className="w-3.5 h-3.5 text-white" />
             </span>

@@ -31,3 +31,4 @@ export default function Beranda({ products, onPesanProduk, onBukaKatalog, onBuka
     </div>
   );
 }
+

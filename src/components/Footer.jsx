@@ -103,7 +103,7 @@ export default function Footer({ onOpenAdmin, onOpenCart, onOpenTips, isKatalogP
                 onClick={onOpenAdmin}
                 className="w-full bg-[#FEEFE6] hover:bg-[#FCDFD0] text-[#8A3319] text-xs font-semibold py-2.5 px-4 rounded-xl border border-[#F6DAC8] flex items-center justify-center gap-2 transition-all"
               >
-                <span>Login Owner Mas Ifur</span>
+                <span>Login</span>
                 <IconLock className="w-3.5 h-3.5" />
               </button>
 

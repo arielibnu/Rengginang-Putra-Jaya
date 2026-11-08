@@ -150,8 +150,7 @@ export default function LoginOwner({ onKembali, onLoginSukses }) {
             type="submit"
             className="w-full bg-[#B24622] hover:bg-[#973919] active:scale-[0.99] text-white text-xs sm:text-sm font-bold py-3 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5 mt-2"
           >
-            <span>Masuk ke Dashboard Admin</span>
-            <span>→</span>
+            <span>Masuk</span>
           </button>
 
         </form>
