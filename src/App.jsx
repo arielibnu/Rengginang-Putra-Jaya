@@ -9,19 +9,22 @@ import CartDrawer from './components/CartDrawer';
 import CheckoutModal from './components/CheckoutModal';
 import AdminModal from './components/AdminModal';
 import TipsModal from './components/TipsModal';
+import Katalog from './pages/Katalog';
 import { productsData } from './data/products';
 
 export default function App() {
   const [products, setProducts] = useState(productsData);
 
-  // Initial cart with 3 items matching the badge "3" in the screenshot
+  // Tab yang aktif: 'beranda' atau 'katalog'
+  const [activeTab, setActiveTab] = useState('katalog');
+
+  // Keranjang belanja dengan 3 item default sesuai gambar
   const [cart, setCart] = useState([
     { ...productsData[0], quantity: 1 },
     { ...productsData[1], quantity: 1 },
     { ...productsData[2], quantity: 1 },
   ]);
 
-  const [activeTab, setActiveTab] = useState('hero');
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
@@ -38,85 +41,46 @@ export default function App() {
 
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-  const handleAddToCart = (product) => {
+  // Tambah item ke keranjang
+  const handleAddToCart = (item) => {
     setCart((prevCart) => {
-      const existing = prevCart.find((item) => item.id === product.id);
+      const existing = prevCart.find((p) => p.id === item.id);
       if (existing) {
-        return prevCart.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
+        return prevCart.map((p) =>
+          p.id === item.id ? { ...p, quantity: p.quantity + 1 } : p
         );
       } else {
-        return [...prevCart, { ...product, quantity: 1 }];
+        return [...prevCart, { ...item, name: item.name || item.nama, quantity: 1, weight: '450g' }];
       }
     });
-    showToast(`1 bks ${product.name} dimasukkan ke keranjang`);
-  };
-
-  const handleOrderNow = (product) => {
-    handleAddToCart(product);
-    setIsCartOpen(true);
+    showToast(`1 pack ${item.nama || item.name} ditambahkan ke keranjang`);
   };
 
   const handleUpdateQty = (productId, newQty) => {
     if (newQty <= 0) {
-      handleRemoveItem(productId);
+      setCart((prevCart) => prevCart.filter((p) => p.id !== productId));
       return;
     }
     setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.id === productId ? { ...item, quantity: newQty } : item
+      prevCart.map((p) =>
+        p.id === productId ? { ...p, quantity: newQty } : p
       )
     );
   };
 
   const handleRemoveItem = (productId) => {
-    setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
-  };
-
-  const handleProceedCheckout = () => {
-    setIsCartOpen(false);
-    setIsCheckoutOpen(true);
+    setCart((prevCart) => prevCart.filter((p) => p.id !== productId));
   };
 
   const handleConfirmOrder = (orderData) => {
     setOrders((prev) => [orderData, ...prev]);
-
-    // Decrement stock for ordered items
-    setProducts((prevProducts) =>
-      prevProducts.map((p) => {
-        const orderedItem = orderData.items.find((item) => item.id === p.id);
-        if (orderedItem) {
-          const nextStock = Math.max(0, p.stock - orderedItem.quantity);
-          return {
-            ...p,
-            stock: nextStock,
-            stockWarning: nextStock <= 5,
-          };
-        }
-        return p;
-      })
-    );
-
-    // Clear cart
     setCart([]);
-  };
-
-  const handleUpdateStock = (productId, newStock) => {
-    setProducts((prev) =>
-      prev.map((p) =>
-        p.id === productId
-          ? { ...p, stock: newStock, stockWarning: newStock <= 5 }
-          : p
-      )
-    );
   };
 
   return (
     <div className="min-h-screen bg-[#FAF6F0] flex flex-col font-sans selection:bg-[#FCD2BC] selection:text-[#5C200E]">
       
-      {/* Toast Notification */}
+      {/* Notifikasi Toast */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 bg-[#201815] text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2 border border-stone-700 animate-bounce">
           <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
@@ -130,39 +94,35 @@ export default function App() {
         onOpenCart={() => setIsCartOpen(true)}
         onOpenAdmin={() => setIsAdminOpen(true)}
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        onSelectTab={setActiveTab}
       />
 
-      {/* Main Content */}
+      {/* Konten Halaman */}
       <main className="flex-1">
-        {/* Hero Section */}
-        <Hero
-          onExploreClick={() => {
-            setActiveTab('katalog');
-            document.getElementById('katalog')?.scrollIntoView({ behavior: 'smooth' });
-          }}
-          onAboutClick={() => {
-            document.getElementById('cerita')?.scrollIntoView({ behavior: 'smooth' });
-          }}
-        />
-
-        {/* Cerita UMKM & Features */}
-        <Features />
-
-        {/* 4 Varian Rengginang Catalog */}
-        <ProductCatalog
-          products={products}
-          onOrderProduct={handleOrderNow}
-          onOpenTips={() => setIsTipsOpen(true)}
-        />
-
-        {/* Belanja Tanpa Repot CTA */}
-        <CtaSection
-          onStartOrder={() => {
-            setActiveTab('katalog');
-            document.getElementById('katalog')?.scrollIntoView({ behavior: 'smooth' });
-          }}
-        />
+        {activeTab === 'katalog' ? (
+          /* Halaman Katalog Khusus (sesuai gambar katalog baru) */
+          <Katalog onTambahKeranjang={handleAddToCart} />
+        ) : (
+          /* Halaman Beranda / Landing Page */
+          <>
+            <Hero
+              onExploreClick={() => setActiveTab('katalog')}
+              onAboutClick={() => {
+                document.getElementById('cerita')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            />
+            <Features />
+            <ProductCatalog
+              products={products}
+              onOrderProduct={(p) => {
+                handleAddToCart(p);
+                setIsCartOpen(true);
+              }}
+              onOpenTips={() => setIsTipsOpen(true)}
+            />
+            <CtaSection onStartOrder={() => setActiveTab('katalog')} />
+          </>
+        )}
       </main>
 
       {/* Footer */}
@@ -170,19 +130,23 @@ export default function App() {
         onOpenAdmin={() => setIsAdminOpen(true)}
         onOpenCart={() => setIsCartOpen(true)}
         onOpenTips={() => setIsTipsOpen(true)}
+        isKatalogPage={activeTab === 'katalog'}
       />
 
-      {/* Slide-over Cart Drawer */}
+      {/* Drawer Keranjang Belanja */}
       <CartDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
         cart={cart}
         onUpdateQty={handleUpdateQty}
         onRemoveItem={handleRemoveItem}
-        onProceedCheckout={handleProceedCheckout}
+        onProceedCheckout={() => {
+          setIsCartOpen(false);
+          setIsCheckoutOpen(true);
+        }}
       />
 
-      {/* Checkout Form Modal */}
+      {/* Modal Formulir Pemesanan */}
       <CheckoutModal
         isOpen={isCheckoutOpen}
         onClose={() => setIsCheckoutOpen(false)}
@@ -190,16 +154,20 @@ export default function App() {
         onConfirmOrder={handleConfirmOrder}
       />
 
-      {/* Admin / Mas Ifur Login & Stock Management Modal */}
+      {/* Modal Login Pengelola / Owner */}
       <AdminModal
         isOpen={isAdminOpen}
         onClose={() => setIsAdminOpen(false)}
         products={products}
-        onUpdateStock={handleUpdateStock}
+        onUpdateStock={(id, stock) => {
+          setProducts((prev) =>
+            prev.map((p) => (p.id === id ? { ...p, stock } : p))
+          );
+        }}
         orders={orders}
       />
 
-      {/* Tips Menggoreng & Info Grosir Modal */}
+      {/* Modal Panduan Tips Menggoreng */}
       <TipsModal
         isOpen={isTipsOpen}
         onClose={() => setIsTipsOpen(false)}
@@ -208,4 +176,3 @@ export default function App() {
     </div>
   );
 }
-

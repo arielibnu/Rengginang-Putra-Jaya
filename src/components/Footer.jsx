@@ -2,21 +2,16 @@ import React from 'react';
 import { IconMapPin, IconPhone, IconClock, IconLock } from './Icons';
 import { shopInfo } from '../data/products';
 
-export default function Footer({ onOpenAdmin, onOpenCart, onOpenTips }) {
-  const scrollTo = (id) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
-
+export default function Footer({ onOpenAdmin, onOpenCart, onOpenTips, isKatalogPage = false }) {
   return (
     <footer className="bg-[#FAF6F0] pt-12 sm:pt-16 pb-8 border-t border-[#EFE6DC]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         
-        {/* 4 Columns Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 mb-12">
+        {/* Columns Grid */}
+        <div className={`grid grid-cols-1 sm:grid-cols-2 ${isKatalogPage ? 'lg:grid-cols-12' : 'lg:grid-cols-12'} gap-8 mb-12`}>
           
           {/* Column 1: Brand Info */}
-          <div className="lg:col-span-4 space-y-4">
+          <div className={`${isKatalogPage ? 'lg:col-span-5' : 'lg:col-span-4'} space-y-4`}>
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-[#8A3319] flex items-center justify-center text-white font-extrabold text-sm shadow-xs">
                 PJ
@@ -40,13 +35,13 @@ export default function Footer({ onOpenAdmin, onOpenCart, onOpenTips }) {
           </div>
 
           {/* Column 2: Belanja Praktis */}
-          <div className="lg:col-span-2 space-y-3">
+          <div className={`${isKatalogPage ? 'lg:col-span-3' : 'lg:col-span-2'} space-y-3`}>
             <h4 className="font-bold text-sm text-[#201815]">
               Belanja Praktis
             </h4>
             <ul className="space-y-2 text-xs text-[#655B53]">
               <li>
-                <button onClick={() => scrollTo('katalog')} className="hover:text-[#8A3319] transition-colors">
+                <button onClick={onOpenTips} className="hover:text-[#8A3319] transition-colors">
                   Pilihan Varian Rasa
                 </button>
               </li>
@@ -74,7 +69,7 @@ export default function Footer({ onOpenAdmin, onOpenCart, onOpenTips }) {
           </div>
 
           {/* Column 3: Kontak & Sentra Produksi */}
-          <div className="lg:col-span-3 space-y-3">
+          <div className={`${isKatalogPage ? 'lg:col-span-4' : 'lg:col-span-3'} space-y-3`}>
             <h4 className="font-bold text-sm text-[#201815]">
               Kontak & Sentra Produksi
             </h4>
@@ -94,27 +89,29 @@ export default function Footer({ onOpenAdmin, onOpenCart, onOpenTips }) {
             </ul>
           </div>
 
-          {/* Column 4: Akses Pengelola */}
-          <div className="lg:col-span-3 space-y-3">
-            <h4 className="font-bold text-sm text-[#201815]">
-              Akses Pengelola
-            </h4>
-            <p className="text-xs text-[#655B53] leading-relaxed">
-              Sistem internal manajemen stok rengginang jemur, verifikasi pesanan, & logistik reseller.
-            </p>
-            
-            <button
-              onClick={onOpenAdmin}
-              className="w-full bg-[#FEEFE6] hover:bg-[#FCDFD0] text-[#8A3319] text-xs font-semibold py-2.5 px-4 rounded-xl border border-[#F6DAC8] flex items-center justify-center gap-2 transition-all"
-            >
-              <span>Login Owner Mas Ifur</span>
-              <IconLock className="w-3.5 h-3.5" />
-            </button>
+          {/* Column 4: Akses Pengelola (Hanya jika bukan di halaman katalog penuh) */}
+          {!isKatalogPage && (
+            <div className="lg:col-span-3 space-y-3">
+              <h4 className="font-bold text-sm text-[#201815]">
+                Akses Pengelola
+              </h4>
+              <p className="text-xs text-[#655B53] leading-relaxed">
+                Sistem internal manajemen stok rengginang jemur, verifikasi pesanan, & logistik reseller.
+              </p>
+              
+              <button
+                onClick={onOpenAdmin}
+                className="w-full bg-[#FEEFE6] hover:bg-[#FCDFD0] text-[#8A3319] text-xs font-semibold py-2.5 px-4 rounded-xl border border-[#F6DAC8] flex items-center justify-center gap-2 transition-all"
+              >
+                <span>Login Owner Mas Ifur</span>
+                <IconLock className="w-3.5 h-3.5" />
+              </button>
 
-            <p className="text-[11px] text-[#8C827A] text-center">
-              Portal Petugas Gudang & Ekspedisi
-            </p>
-          </div>
+              <p className="text-[11px] text-[#8C827A] text-center">
+                Portal Petugas Gudang & Ekspedisi
+              </p>
+            </div>
+          )}
 
         </div>
 
@@ -131,4 +128,3 @@ export default function Footer({ onOpenAdmin, onOpenCart, onOpenTips }) {
     </footer>
   );
 }
-

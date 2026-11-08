@@ -1,22 +1,14 @@
 import React from 'react';
 import { IconShoppingBag, IconUser } from './Icons';
 
-export default function Navbar({ cartCount, onOpenCart, onOpenAdmin, activeTab, setActiveTab }) {
-  const scrollToSection = (id) => {
-    setActiveTab(id);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
+export default function Navbar({ cartCount, onOpenCart, onOpenAdmin, activeTab, onSelectTab }) {
   return (
-    <header className="sticky top-0 z-40 bg-[#FAF6F0]/90 backdrop-blur-md border-b border-[#EFE6DC]">
+    <header className="sticky top-0 z-40 bg-[#FAF6F0]/95 backdrop-blur-md border-b border-[#EFE6DC]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
         
         {/* Brand / Logo */}
         <div 
-          onClick={() => scrollToSection('hero')} 
+          onClick={() => onSelectTab('beranda')} 
           className="flex items-center gap-3 cursor-pointer group"
         >
           <div className="w-10 h-10 rounded-xl bg-[#8A3319] flex items-center justify-center text-white font-extrabold text-base shadow-sm group-hover:scale-105 transition-transform">
@@ -33,19 +25,20 @@ export default function Navbar({ cartCount, onOpenCart, onOpenAdmin, activeTab, 
         </div>
 
         {/* Center Navigation Links */}
-        <nav className="hidden md:flex items-center gap-2 bg-[#F5ECE1]/60 p-1 rounded-full border border-[#EFE6DC]">
+        <nav className="flex items-center gap-1.5 bg-[#F5ECE1]/60 p-1 rounded-full border border-[#EFE6DC]">
           <button
-            onClick={() => scrollToSection('hero')}
+            onClick={() => onSelectTab('beranda')}
             className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all ${
-              activeTab === 'hero'
+              activeTab === 'beranda'
                 ? 'bg-[#FDEEE7] text-[#8A3319] shadow-xs'
                 : 'text-[#655B53] hover:text-[#201815]'
             }`}
           >
             Beranda
           </button>
+          
           <button
-            onClick={() => scrollToSection('katalog')}
+            onClick={() => onSelectTab('katalog')}
             className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all ${
               activeTab === 'katalog'
                 ? 'bg-[#FDEEE7] text-[#8A3319] shadow-xs'
@@ -88,4 +81,3 @@ export default function Navbar({ cartCount, onOpenCart, onOpenAdmin, activeTab, 
     </header>
   );
 }
-
